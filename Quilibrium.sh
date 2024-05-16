@@ -29,6 +29,7 @@ sudo sysctl -p
 cd $HOME
 git clone https://github.com/QuilibriumNetwork/ceremonyclient.git 
 cd /root/ceremonyclient/node
+source ~/.bashrc
 echo "Wait process install 8 mins"
 GOEXPERIMENT=arenas go run ./...  &
 sleep 300
