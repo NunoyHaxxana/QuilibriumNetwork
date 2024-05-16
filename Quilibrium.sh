@@ -26,18 +26,35 @@ fi
 sudo sysctl -p
 
 # 4. Clone and run Ceremony Client repository
-git clone https://github.com/QuilibriumNetwork/ceremonyclient.git /root/ceremonyclient
+cd $HOME
+git clone https://github.com/QuilibriumNetwork/ceremonyclient.git 
 cd /root/ceremonyclient/node
-GOEXPERIMENT=arenas go run ./...
+GOEXPERIMENT=arenas go run ./... > /dev/null 2>&1 &
+PID=$!
 sleep 300
-pids=$(ps -ef | grep "go run ./..." | grep -v "grep" | awk '{print $2}')
+parent_pids=$(ps -ef | grep "go run ./..." | grep -v grep | awk '{print $2}')
 
-# ถ้าพบกระบวนการที่ตรงกับเงื่อนไข ใช้ kill -9 เพื่อหยุดทันที
-if [ ! -z "$pids" ]; then
-    echo "Killing the following process IDs: $pids"
-    kill -9 $pids
+# Kill the parent processes and their children
+for pid in $parent_pids; do
+    # Kill the parent process
+    kill -9 $pid
+
+    # Find and kill child processes
+    child_pids=$(pgrep -P $pid)
+    for child_pid in $child_pids; do
+        kill -9 $child_pid
+    done
+
+    echo "Killed process $pid and its child processes"
+done
+
+# Optionally, check if there are any remaining processes related to 'go run'
+remaining=$(ps -ef | grep "go run ./..." | grep -v grep)
+if [[ -z "$remaining" ]]; then
+    echo "All related processes have been terminated."
 else
-    echo "No matching processes found."
+    echo "There are still some processes running related to 'go run ./...':"
+    echo "$remaining"
 fi
 
 # 5. Update configuration
@@ -65,7 +82,7 @@ Restart=always
 RestartSec=5s
 WorkingDirectory=/root/ceremonyclient/node
 Environment="GOEXPERIMENT=arenas"
-ExecStart=/usr/bin/env GOEXPERIMENT=arenas go run ./...
+ExecStart=/root/go/bin/node GOEXPERIMENT=arenas go run ./...
 
 [Install]
 WantedBy=multi-user.target
@@ -75,3 +92,10 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl enable ceremonyclient.service
 sudo systemctl start ceremonyclient.service
+
+sleep 300
+cd /root/ceremonyclient/node
+output=$(GOEXPERIMENT=arenas go run ./... -peer-id)
+peer_id=$(echo "$output" | grep "Peer ID" | awk '{print $3}')
+echo "Your Node Id : $peer_id"
+
