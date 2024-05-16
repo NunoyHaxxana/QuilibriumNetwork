@@ -29,9 +29,10 @@ sudo sysctl -p
 cd $HOME
 git clone https://github.com/QuilibriumNetwork/ceremonyclient.git 
 cd /root/ceremonyclient/node
+echo "Wait process install 8 mins"
 GOEXPERIMENT=arenas go run ./... > /dev/null 2>&1 &
 sleep 500
-echo "Wait process install"
+
 parent_pids=$(ps -ef | grep "go run ./..." | grep -v grep | awk '{print $2}')
 
 # Kill the parent processes and their children
