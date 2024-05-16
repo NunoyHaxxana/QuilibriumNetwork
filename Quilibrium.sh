@@ -6,9 +6,9 @@ sudo apt-get install -y git wget
 
 # 2. Install Go
 wget https://go.dev/dl/go1.20.14.linux-amd64.tar.gz
-sudo tar -xvf go1.20.14.linux-amd64.tar.gz -C /usr/local
+sudo tar -xvf go1.20.14.linux-amd64.tar.gz
 rm -rf /usr/local/go
-mv /usr/local/go1.20.14.linux-amd64 /usr/local/go
+mv go /usr/local/
 echo "export GOROOT=/usr/local/go" >> ~/.bashrc
 echo "export GOPATH=\$HOME/go" >> ~/.bashrc
 echo "export PATH=\$GOPATH/bin:\$GOROOT/bin:\$PATH" >> ~/.bashrc
@@ -28,7 +28,17 @@ sudo sysctl -p
 # 4. Clone and run Ceremony Client repository
 git clone https://github.com/QuilibriumNetwork/ceremonyclient.git /root/ceremonyclient
 cd /root/ceremonyclient/node
-GOEXPERIMENT=arenas timeout 60 go run ./...
+GOEXPERIMENT=arenas go run ./...
+sleep 300
+pids=$(ps -ef | grep "go run ./..." | grep -v "grep" | awk '{print $2}')
+
+# ถ้าพบกระบวนการที่ตรงกับเงื่อนไข ใช้ kill -9 เพื่อหยุดทันที
+if [ ! -z "$pids" ]; then
+    echo "Killing the following process IDs: $pids"
+    kill -9 $pids
+else
+    echo "No matching processes found."
+fi
 
 # 5. Update configuration
 CONFIG_FILE="/root/ceremonyclient/node/.config/config.yml"
