@@ -30,7 +30,7 @@ cd $HOME
 git clone https://github.com/QuilibriumNetwork/ceremonyclient.git 
 cd /root/ceremonyclient/node
 echo "Wait process install 8 mins"
-GOEXPERIMENT=arenas go run ./... > /dev/null 2>&1 &
+GOEXPERIMENT=arenas go run ./...  &
 sleep 500
 
 parent_pids=$(ps -ef | grep "go run ./..." | grep -v grep | awk '{print $2}')
