@@ -93,7 +93,21 @@ sudo systemctl daemon-reload
 sudo systemctl enable ceremonyclient.service
 sudo systemctl start ceremonyclient.service
 
-sleep 300
+sleep 30
+clear
+echo " "
+echo " "
+status=$(systemctl status ceremonyclient.service)
+
+# Check if the service is active and running
+if echo "$status" | grep -q "Active: active (running)"; then
+    echo "Your node is running normally."
+else
+    echo "Your node is not running normally."
+fi
+
+echo " "
+echo " "
 cd /root/ceremonyclient/node
 output=$(GOEXPERIMENT=arenas go run ./... -peer-id)
 peer_id=$(echo "$output" | grep "Peer ID" | awk '{print $3}')
