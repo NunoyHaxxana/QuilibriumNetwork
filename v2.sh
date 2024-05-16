@@ -28,7 +28,7 @@ sudo sysctl -p
 
 # 4. Clone and run Ceremony Client repository
 cd /root/
-rm -rf /root/ceremonyclient/
+rm -rf /root/ceremonyclient
 git clone https://github.com/QuilibriumNetwork/ceremonyclient.git 
 cd /root/ceremonyclient/node/
 source ~/.bashrc
