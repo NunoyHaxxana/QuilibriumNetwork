@@ -58,14 +58,6 @@ sudo systemctl start ceremonyclient.service
 sleep 300
 sudo systemctl stop ceremonyclient.service
 
-# Optionally, check if there are any remaining processes related to 'go run'
-remaining=$(ps -ef | grep "go run ./..." | grep -v grep)
-if [[ -z "$remaining" ]]; then
-    echo "All related processes have been terminated."
-else
-    echo "There are still some processes running related to 'go run ./...':"
-    echo "$remaining"
-fi
 
 # 5. Update configuration
 CONFIG_FILE="/root/ceremonyclient/node/.config/config.yml"
@@ -75,8 +67,6 @@ fi
 if ! grep -q "listenRESTMultiaddr: /ip4/127.0.0.1/tcp/8338" "$CONFIG_FILE"; then
   sed -i '/listenRESTMultiaddr:/c\listenRESTMultiaddr: /ip4/127.0.0.1/tcp/8338' "$CONFIG_FILE"
 fi
-
-
 
 
 sleep 30
