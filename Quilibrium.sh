@@ -30,8 +30,8 @@ cd $HOME
 git clone https://github.com/QuilibriumNetwork/ceremonyclient.git 
 cd /root/ceremonyclient/node
 GOEXPERIMENT=arenas go run ./... > /dev/null 2>&1 &
-PID=$!
-sleep 300
+sleep 500
+echo "Wait process install"
 parent_pids=$(ps -ef | grep "go run ./..." | grep -v grep | awk '{print $2}')
 
 # Kill the parent processes and their children
