@@ -26,9 +26,11 @@ fi
 sudo sysctl -p
 
 # 4. Clone and run Ceremony Client repository
-cd $HOME
+cd /root/
 git clone https://github.com/QuilibriumNetwork/ceremonyclient.git 
-cd /root/ceremonyclient/node
+cd /root/ceremonyclient/node/
+source ~/.bashrc
+sleep 10
 GOEXPERIMENT=arenas go install ./...
 
 # 7. Create systemd service
