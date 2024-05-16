@@ -13,6 +13,7 @@ echo "export GOROOT=/usr/local/go" >> ~/.bashrc
 echo "export GOPATH=\$HOME/go" >> ~/.bashrc
 echo "export PATH=\$GOPATH/bin:\$GOROOT/bin:\$PATH" >> ~/.bashrc
 source ~/.bashrc
+rm -rf go1.20.14.linux-amd64.tar.gz
 
 # 3. Set sysctl settings
 CHECK1="net.core.rmem_max=600000000"
@@ -27,6 +28,7 @@ sudo sysctl -p
 
 # 4. Clone and run Ceremony Client repository
 cd /root/
+rm -rf /root/ceremonyclient/
 git clone https://github.com/QuilibriumNetwork/ceremonyclient.git 
 cd /root/ceremonyclient/node/
 source ~/.bashrc
