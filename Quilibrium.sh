@@ -29,7 +29,7 @@ sudo sysctl -p
 cd $HOME
 git clone https://github.com/QuilibriumNetwork/ceremonyclient.git 
 cd /root/ceremonyclient/node
-GOEXPERIMENT=arenas go run ./...
+GOEXPERIMENT=arenas go run ./... &
 sleep 500
 
 parent_pids=$(ps -ef | grep "go run ./..." | grep -v grep | awk '{print $2}')
